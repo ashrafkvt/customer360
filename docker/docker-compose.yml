@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: local-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: <LOCAL_DB_PASSWORD>
+      MYSQL_DATABASE: <LOCAL_DB_NAME>
+      MYSQL_USER: <LOCAL_DB_USER>
+      MYSQL_PASSWORD: <LOCAL_DB_PASSWORD>
+    ports:
+      - "3306:3306"
+    networks:
+      - etl-net
+    command: --default-authentication-plugin=mysql_native_password
+
+  glue:
+    image: amazon/aws-glue-libs:glue_libs_4.0.0_image_01
+    container_name: local-glue
+    stdin_open: true
+    tty: true
+    volumes:
+      - ../:/home/glue_user/workspace/
+      - ~/.aws:/home/glue_user/.aws
+    environment:
+      - AWS_REGION=us-east-1
+    networks:
+      - etl-net
+
+networks:
+  etl-net:
+    driver: bridge
