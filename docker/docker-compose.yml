@@ -26,6 +26,7 @@ services:
       - ~/.aws:/home/glue_user/.aws
     environment:
       - AWS_REGION=us-east-1
+      - ENV AWS_PROFILE=de-aws-iam
     networks:
       - etl-net
 
